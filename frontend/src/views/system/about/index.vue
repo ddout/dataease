@@ -5,43 +5,43 @@
         slot="header"
         class="clearfix license-header"
       >
-        <img
-          src="@/assets/DataEase-white.png"
-          alt=""
-          width="300"
-        >
+        <!--<img-->
+          <!--src="@/assets/DataEase-white.png"-->
+          <!--alt=""-->
+          <!--width="300"-->
+        <!--&gt;-->
       </div>
       <div class="license-content">
         <div v-if="license.status === 'Fail'">{{ $t('about.invalid_license') }}</div>
         <div v-if="license.status !== 'Fail'">
           <table>
-            <tr>
-              <th>{{ $t('about.auth_to') }}</th>
-              <td>{{ license.corporation }}</td>
-            </tr>
-            <tr>
-              <th>{{ $t('about.expiration_time') }}</th>
-              <td>
-                <label
-                  v-if="license.status === 'expired'"
-                  style="color: red"
-                >{{ license.expired }} {{ $t('about.expirationed') }}</label>
-                <label v-if="license.status === 'valid'">{{ license.expired }}</label>
-              </td>
-            </tr>
-            <tr>
-              <th>{{ $t('about.auth_num') }}</th>
-              <td>{{ license.count }}</td>
-            </tr>
-            <tr>
-              <th>{{ $t('about.version') }}</th>
-              <td>
-                <span v-if="license.edition">
-                  <span v-if="license.edition === 'Standard'">{{ $t('about.standard') }}</span>
-                  <span v-if="license.edition === 'Enterprise'">{{ $t('about.enterprise') }}</span>
-                </span>
-              </td>
-            </tr>
+            <!--<tr>-->
+              <!--<th>{{ $t('about.auth_to') }}</th>-->
+              <!--<td>{{ license.corporation }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+              <!--<th>{{ $t('about.expiration_time') }}</th>-->
+              <!--<td>-->
+                <!--<label-->
+                  <!--v-if="license.status === 'expired'"-->
+                  <!--style="color: red"-->
+                <!--&gt;{{ license.expired }} {{ $t('about.expirationed') }}</label>-->
+                <!--<label v-if="license.status === 'valid'">{{ license.expired }}</label>-->
+              <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+              <!--<th>{{ $t('about.auth_num') }}</th>-->
+              <!--<td>{{ license.count }}</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+              <!--<th>{{ $t('about.version') }}</th>-->
+              <!--<td>-->
+                <!--<span v-if="license.edition">-->
+                  <!--<span v-if="license.edition === 'Standard'">{{ $t('about.standard') }}</span>-->
+                  <!--<span v-if="license.edition === 'Enterprise'">{{ $t('about.enterprise') }}</span>-->
+                <!--</span>-->
+              <!--</td>-->
+            <!--</tr>-->
             <tr>
               <th>{{ $t('about.version_num') }}</th>
               <td>
@@ -52,31 +52,31 @@
         </div>
 
         <div class="md-padding" />
-        <div
-          v-if="user.isAdmin"
-          layout="row"
-          layout-align="space-between center"
-          class="lic_rooter"
-        >
-          <el-upload
-            action=""
-            :multiple="false"
-            :show-file-list="false"
-            :file-list="fileList"
-            accept=".key"
-            name="file"
-            :before-upload="beforeUpload"
-          >
-            <a class="md-primary pointer">{{ $t('about.update_license') }}</a>
+        <!--<div-->
+          <!--v-if="user.isAdmin"-->
+          <!--layout="row"-->
+          <!--layout-align="space-between center"-->
+          <!--class="lic_rooter"-->
+        <!--&gt;-->
+          <!--<el-upload-->
+            <!--action=""-->
+            <!--:multiple="false"-->
+            <!--:show-file-list="false"-->
+            <!--:file-list="fileList"-->
+            <!--accept=".key"-->
+            <!--name="file"-->
+            <!--:before-upload="beforeUpload"-->
+          <!--&gt;-->
+            <!--<a class="md-primary pointer">{{ $t('about.update_license') }}</a>-->
 
-          </el-upload>
+          <!--</el-upload>-->
 
-          <a
-            class="md-primary pointer"
-            @click="support"
-          >{{ $t('about.support') }}</a>
+          <!--<a-->
+            <!--class="md-primary pointer"-->
+            <!--@click="support"-->
+          <!--&gt;{{ $t('about.support') }}</a>-->
 
-        </div>
+        <!--</div>-->
       </div>
     </el-card>
   </div>

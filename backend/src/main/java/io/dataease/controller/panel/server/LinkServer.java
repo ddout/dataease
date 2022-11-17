@@ -12,6 +12,7 @@ import io.dataease.dto.panel.link.ValidateDto;
 import io.dataease.service.chart.ChartViewService;
 import io.dataease.service.panel.PanelLinkService;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,6 +83,20 @@ public class LinkServer implements LinkApi {
         dto.setEnablePwd(one.getEnablePwd());
         dto.setPassPwd(panelLinkService.validateHeads(one));
         dto.setExpire(panelLinkService.isExpire(one));
+        //auto2-code认证
+        //增加auth-code的远程接口验证合法性逻辑
+        //当cid和rcode存在时，走auth-code校验逻辑
+        if(!StringUtils.isEmpty(request.getCid()) && !StringUtils.isEmpty(request.getRcode())){
+            boolean authFlag = panelLinkService.validateAuth(one,request.getCid(), request.getRcode());
+            if(authFlag){
+                dto.setPassPwd(true);
+            } else {
+                //校验失败
+                dto.setValid(false);
+                dto.setPassPwd(false);
+            }
+        }
+        //
         return dto;
     }
 

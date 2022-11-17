@@ -31,6 +31,10 @@
   }
   const link = getQueryVariable('link')
   const user = getQueryVariable('user')
+  //auto2-code认证
+  const cid = getQueryVariable('cid')
+  const rcode = getQueryVariable('rcode')
+  //auto2-code认证
   const terminal = getQueryVariable('terminal')
   const attachParams = getQueryVariable('attachParams')
   let url = "/#/delink?link=" + encodeURIComponent(link)
@@ -40,6 +44,14 @@
   if (user) {
     url += '&user=' + encodeURIComponent(user)
   }
+  //auto2-code认证
+  if (cid) {
+    url += '&cid=' + encodeURIComponent(cid)
+  }
+  if (rcode) {
+    url += '&rcode=' + encodeURIComponent(rcode)
+  }
+  //auto2-code认证
   if (attachParams) {
     url += '&attachParams=' + encodeURIComponent(attachParams)
   }

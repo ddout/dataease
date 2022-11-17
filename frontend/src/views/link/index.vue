@@ -41,7 +41,10 @@ export default {
       PARAMKEY: 'link',
       link: null,
       user: null,
-      showIndex: -1
+      showIndex: -1,
+      // auto2-code认证：cid=客户端应用id，rcode=临时code
+      cid: null,
+      rcode: null
     }
   },
   created() {
@@ -53,17 +56,30 @@ export default {
       this.$store.commit('setPublicLinkStatus', true)
       this.link = this.$route.query.link
       this.user = this.$route.query.user
+      //auto2-code认证
+      this.cid = this.$route.query.cid
+      this.rcode = this.$route.query.rcode
       if (!this.link) {
         this.link = getQueryVariable(this.PARAMKEY)
       }
       if (!this.user) {
         this.user = getQueryVariable('user')
       }
+      //auto2-code认证
+      if (!this.cid) {
+        this.cid = getQueryVariable('cid')
+      }
+      if (!this.rcode) {
+        this.rcode = getQueryVariable('rcode')
+      }
+      //auto2-code认证
       if (!this.link) {
         this.showError()
         return
       }
-      const params = this.user ? { link: encodeURIComponent(this.link), user: encodeURIComponent(this.user) } : { link: encodeURIComponent(this.link) }
+      const params = this.user
+        ? { link: encodeURIComponent(this.link), user: encodeURIComponent(this.user),cid: encodeURIComponent(this.cid), rcode: encodeURIComponent(this.rcode) }
+        : { link: encodeURIComponent(this.link), cid: encodeURIComponent(this.cid), rcode: encodeURIComponent(this.rcode) }
       validate(params).then(res => {
         const { resourceId, valid, enablePwd, passPwd, expire, userId } = res.data
         this.resourceId = resourceId
