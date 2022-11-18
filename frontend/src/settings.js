@@ -2,7 +2,7 @@ module.exports = {
   TokenKey: 'Authorization',
   RefreshTokenKey: 'refreshauthorization',
   LinkTokenKey: 'LINK-PWD-TOKEN',
-  title: 'DataEase',
+  title: 'DataEase-1.16.0.001',
   /* for sso */
   IdTokenKey: 'IdToken',
   AccessTokenKey: 'AccessToken',
