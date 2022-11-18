@@ -22,6 +22,7 @@ import io.dataease.plugins.common.base.domain.*;
 import io.dataease.plugins.common.base.mapper.PanelGroupMapper;
 import io.dataease.plugins.common.base.mapper.PanelLinkMapper;
 import io.dataease.plugins.common.base.mapper.PanelLinkMappingMapper;
+import io.dataease.plugins.common.base.mapper.SysAuthAppClientMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +53,9 @@ public class PanelLinkService {
     private ExtPanelLinkMapper extPanelLinkMapper;
     @Resource
     private PanelLinkMappingMapper panelLinkMappingMapper;
+
+    @Resource
+    private SysAuthAppClientMapper sysAuthAppClientMapper;
 
     @Transactional
     public void changeValid(LinkRequest request) {
@@ -251,10 +255,24 @@ public class PanelLinkService {
         try{
             /*TODO
                 1、查询配置数据中，cid对应的回调地址
+                a、用cid去查，同时满足启用、在有效期内两个条件
+                b、获取到回调地址
                 2、用回调地址请求，拿到验证结果
             */
-            String url = "https://dev.usemock.com/6375ff3ecc89b05b04a4b136/auth/back/{cid}/{rcode}";
-            url = url.replaceAll("\\{cid}",cid).replaceAll("\\{rcode}",rcode);
+            //
+            SysAuthAppClient sac = sysAuthAppClientMapper.selectEnabledByPrimaryKey(cid);
+            if(null == sac){
+                return false;
+            }
+            //
+            String callbackUrl = sac.getCallbackUrl();
+            if(StringUtils.isEmpty(callbackUrl)){
+                return false;
+            }
+            //替换cid和rcode的变量
+//            String url = "https://dev.usemock.com/6375ff3ecc89b05b04a4b136/auth/back/{cid}/{rcode}";
+            String url = callbackUrl.replaceAll("\\{cid}",cid).replaceAll("\\{rcode}",rcode);
+            //请求
             String result = HttpRequest.get(url).setReadTimeout(3000).execute().body();
             //
             LogUtil.debug(result);
