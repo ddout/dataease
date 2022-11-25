@@ -122,12 +122,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
    如：http://xxxxxx/com/auth/back/:cid/:rcode
    其中：cid为客户端id，rcode为随机验证字符串
    回调接口需要返回json格式数：
-   ```json
+  
    {
       "result":"ok",
       "code":"200"
     }
-   ```
+  
 4、dataease后端数据库表sys_auth_app_client，中增加一行客户端信息，用于配置回调url及其他有效性。
     并把该行数据的id作为cid交付给接入系统。
     回调url示意：https://xcxcxc.com/auth/back/{cid}/{rcode} ,{cid}/{rcode} 为固定写法，用于替换参数。
@@ -146,12 +146,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
     e、B系统获取请求cid，进行基础有效性验证，通过后获取rcode，并根据cid在数据库中配置的回调链接请求A系统。
     f、A系统根据cid及rcdoe进行验证。（验证rcode是否有效，同时是否过期）
        如果验证通过则将该rcode禁用，并返回通过验证的数据
-       ```json
+       
        {
           "result":"ok",
           "code":"200"
         }
-       ```
+      
     g、B系统收到有效返回后，重新加载页面并显示仪表板。
   </pre>  
    
