@@ -114,6 +114,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 
 ## Auth-code授权接入
+<pre>
 以下示意采用A系统、B系统为示意。A系统为=接入仪表板的业务系统，B系统=dataease服务。
 1、仪表盘制作完成后，点击“创建公共链接”进行分享，将密码保护开启。（此点与原逻辑相同）
 2、复制分享链接给接入系统，用于配置为菜单的准备；如：http://IP:PORT/link/ySBK201q 
@@ -152,7 +153,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
         }
        ```
     g、B系统收到有效返回后，重新加载页面并显示仪表板。
-    
+  </pre>  
    
    
    
