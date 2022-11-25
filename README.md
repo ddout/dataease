@@ -111,3 +111,49 @@ Licensed under The GNU General Public License version 3 (GPLv3)  (the "License")
 <https://www.gnu.org/licenses/gpl-3.0.html>
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+## Auth-code授权接入
+以下示意采用A系统、B系统为示意。A系统为=接入仪表板的业务系统，B系统=dataease服务。
+1、仪表盘制作完成后，点击“创建公共链接”进行分享，将密码保护开启。（此点与原逻辑相同）
+2、复制分享链接给接入系统，用于配置为菜单的准备；如：http://IP:PORT/link/ySBK201q 
+3、在接入系统配置菜单时，需要增加一个get的后端接口，用于验证rcode的有效性。
+   如：http://xxxxxx/com/auth/back/:cid/:rcode
+   其中：cid为客户端id，rcode为随机验证字符串
+   回调接口需要返回json格式数：
+   ```json
+   {
+      "result":"ok",
+      "code":"200"
+    }
+   ```sh
+4、dataease后端数据库表sys_auth_app_client，中增加一行客户端信息，用于配置回调url及其他有效性。
+    并把该行数据的id作为cid交付给接入系统。
+    回调url示意：https://xcxcxc.com/auth/back/{cid}/{rcode} ,{cid}/{rcode} 为固定写法，用于替换参数。
+    
+5、接入系统配置最终菜单为：http://IP:PORT/link/ySBK201q/cid/rcode
+   其中：cid为固定写死的（第四部给出的id）。
+         rcode是本系统(接入系统)每次点击菜单后随机生成的64位内验证字符串（请一定随机生成，且使用一次后失效以保障接入安全性）。
+6、完整的交互流程示意：
+    假定仪表板基础链接公共链接=http://IP:PORT/link/ySBK201q 
+    cid=abcdefg1234567
+    交互流程为：
+    a、用户点击A系统的仪表板链接“演示仪表板”
+    b、A系统生成随机验证字符串rcdoe=“kjj123ksjdaksd12u3jasdkj”，并存入缓存(如redis，有效期20秒)
+    c、使用cid+rcdoe生成最终的跳转链接=http://IP:PORT/link/ySBK201q/abcdefg1234567/kjj123ksjdaksd12u3jasdkj
+    d、A系统页面跳转http://IP:PORT/link/ySBK201q/abcdefg1234567/kjj123ksjdaksd12u3jasdkj 此链接。
+    e、B系统获取请求cid，进行基础有效性验证，通过后获取rcode，并根据cid在数据库中配置的回调链接请求A系统。
+    f、A系统根据cid及rcdoe进行验证。（验证rcode是否有效，同时是否过期）
+       如果验证通过则将该rcode禁用，并返回通过验证的数据
+       ```json
+       {
+          "result":"ok",
+          "code":"200"
+        }
+       ```sh
+    g、B系统收到有效返回后，重新加载页面并显示仪表板。
+    
+   
+   
+   
+   
