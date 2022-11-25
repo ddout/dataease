@@ -126,7 +126,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
       "result":"ok",
       "code":"200"
     }
-   ```sh
+   ```
 4、dataease后端数据库表sys_auth_app_client，中增加一行客户端信息，用于配置回调url及其他有效性。
     并把该行数据的id作为cid交付给接入系统。
     回调url示意：https://xcxcxc.com/auth/back/{cid}/{rcode} ,{cid}/{rcode} 为固定写法，用于替换参数。
@@ -150,7 +150,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
           "result":"ok",
           "code":"200"
         }
-       ```sh
+       ```
     g、B系统收到有效返回后，重新加载页面并显示仪表板。
     
    
