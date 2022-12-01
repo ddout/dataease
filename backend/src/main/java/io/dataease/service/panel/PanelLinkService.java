@@ -253,7 +253,10 @@ public class PanelLinkService {
         boolean pass = false;
         //
         try{
-            /*TODO
+            /**
+             * TODO 需要增加改cid是否有权限访问本资源的配置校验(即应用的数据看板授权配置及校验)
+             */
+            /*
                 1、查询配置数据中，cid对应的回调地址
                 a、用cid去查，同时满足启用、在有效期内两个条件
                 b、获取到回调地址
