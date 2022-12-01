@@ -86,7 +86,7 @@ public class LinkServer implements LinkApi {
         //auto2-code认证
         //增加auth-code的远程接口验证合法性逻辑
         //当cid和rcode存在时，走auth-code校验逻辑
-        if(!StringUtils.isEmpty(request.getCid()) && !StringUtils.isEmpty(request.getRcode())){
+        if(!StringUtils.isEmpty(request.getCid()) && !StringUtils.isEmpty(request.getRcode()) && !"false".equals(request.getCid()) && !"false".equals(request.getRcode())){
             boolean authFlag = panelLinkService.validateAuth(one,request.getCid(), request.getRcode());
             if(authFlag){
                 dto.setPassPwd(true);
