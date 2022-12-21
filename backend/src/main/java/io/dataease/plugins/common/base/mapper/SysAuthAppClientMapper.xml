@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.dataease.plugins.common.base.mapper.SysAuthAppClientMapper">
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="io.dataease.plugins.common.base.domain.SysAuthAppClient">
+    select
+      *
+    from sys_auth_app_client
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectEnabledByPrimaryKey" parameterType="java.lang.String" resultType="io.dataease.plugins.common.base.domain.SysAuthAppClient">
+    select
+      *
+    from sys_auth_app_client
+    where id = #{id,jdbcType=VARCHAR}
+      and status = 1
+      and unix_timestamp(now()) BETWEEN utime_begin and utime_end
+  </select>
+</mapper>

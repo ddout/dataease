@@ -1671,6 +1671,7 @@ import CalcChartFieldEdit from '@/views/chart/view/CalcChartFieldEdit'
 import { equalsAny } from '@/utils/StringUtils'
 import PositionAdjust from '@/views/chart/view/PositionAdjust'
 
+
 export default {
   name: 'ChartEdit',
   components: {

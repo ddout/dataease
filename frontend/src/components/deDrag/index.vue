@@ -66,7 +66,7 @@
         @mousedown.stop.prevent="handleDown(handlei, $event)"
         @touchstart.stop.prevent="handleTouchDown(handlei, $event)"
       >
-        <slot :name="handlei" />
+        <slot :name="handlei"/>
       </div>
       <div
         :id="componentCanvasId"
@@ -79,7 +79,7 @@
           class="svg-background"
           :icon-class="mainSlotSvgInner"
         />
-        <slot />
+        <slot/>
       </div>
     </div>
   </div>

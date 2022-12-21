@@ -1,10 +1,19 @@
 package io.dataease.service.panel;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import io.dataease.auth.config.RsaProperties;
 import io.dataease.auth.util.JWTUtils;
 import io.dataease.auth.util.RsaUtil;
 import io.dataease.commons.constants.SysLogConstants;
 import io.dataease.commons.utils.*;
+import io.dataease.commons.utils.AuthUtils;
+import io.dataease.commons.utils.CodingUtil;
+import io.dataease.commons.utils.DeLogUtils;
+import io.dataease.commons.utils.LogUtil;
+import io.dataease.commons.utils.ServletUtils;
 import io.dataease.controller.request.panel.link.EnablePwdRequest;
 import io.dataease.controller.request.panel.link.LinkRequest;
 import io.dataease.controller.request.panel.link.OverTimeRequest;
@@ -17,6 +26,7 @@ import io.dataease.plugins.common.base.mapper.PanelGroupMapper;
 import io.dataease.plugins.common.base.mapper.PanelLinkMapper;
 import io.dataease.plugins.common.base.mapper.PanelLinkMappingMapper;
 import io.dataease.plugins.common.base.mapper.PanelWatermarkMapper;
+import io.dataease.plugins.common.base.mapper.SysAuthAppClientMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +59,9 @@ public class PanelLinkService {
     private PanelLinkMappingMapper panelLinkMappingMapper;
     @Resource
     private PanelWatermarkMapper panelWatermarkMapper;
+
+    @Resource
+    private SysAuthAppClientMapper sysAuthAppClientMapper;
 
     @Transactional
     public void changeValid(LinkRequest request) {
@@ -241,6 +254,66 @@ public class PanelLinkService {
         panelGroupDTO.setWatermarkInfo(panelWatermarkMapper.selectByPrimaryKey("system_default"));
         return panelGroupDTO;
     }
+
+    /**
+     * auto2-code认证,远程接口验证合法性逻辑
+     * @param one 被访问资源
+     * @param cid 客户端id-clientid
+     * @param rcode 客户端传递的临时code
+     * @return
+     * @throws Exception
+     */
+    public boolean validateAuth(PanelLink one , String cid, String rcode) throws Exception {
+        boolean pass = false;
+        //
+        try{
+            /**
+             * TODO 需要增加改cid是否有权限访问本资源的配置校验(即应用的数据看板授权配置及校验)
+             */
+            /*
+                1、查询配置数据中，cid对应的回调地址
+                a、用cid去查，同时满足启用、在有效期内两个条件
+                b、获取到回调地址
+                2、用回调地址请求，拿到验证结果
+            */
+            //
+            SysAuthAppClient sac = sysAuthAppClientMapper.selectEnabledByPrimaryKey(cid);
+            if(null == sac){
+                return false;
+            }
+            //
+            String callbackUrl = sac.getCallbackUrl();
+            if(StringUtils.isEmpty(callbackUrl)){
+                return false;
+            }
+            //替换cid和rcode的变量
+//            String url = "https://dev.usemock.com/6375ff3ecc89b05b04a4b136/auth/back/{cid}/{rcode}";
+            String url = callbackUrl.replaceAll("\\{cid}",cid).replaceAll("\\{rcode}",rcode);
+            //请求
+            String result = HttpRequest.get(url).setReadTimeout(3000).execute().body();
+            //
+            LogUtil.debug(result);
+            //返回参数校验
+            result = JSONUtil.escape(result);
+            JSONObject resultObj = JSONObject.parseObject(result);
+            //
+            String vResult = resultObj.getString("result");
+            String vCode = resultObj.getString("code");
+            if("200".equals(vCode) && "ok".equals(vResult)){
+                //验证成功，写入header
+                pass = true;
+                String token = JWTUtils.signLink(one.getResourceId(), one.getUserId(), one.getPwd());
+                HttpServletResponse httpServletResponse = ServletUtils.response();
+                httpServletResponse.addHeader("Access-Control-Expose-Headers", "LINK-PWD-TOKEN");
+                httpServletResponse.setHeader("LINK-PWD-TOKEN", token);
+                //
+            }
+        } catch (Exception e) {
+            LogUtil.error(e.getMessage(),e);
+        }
+        return pass;
+    }
+
 
     public String getShortUrl(String resourceId) {
         PanelLinkMappingExample example = new PanelLinkMappingExample();

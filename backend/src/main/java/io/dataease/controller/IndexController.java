@@ -67,6 +67,39 @@ public class IndexController {
         }
     }
 
+    /**auto2-code认证
+     * 使用cid和rcode进行认证跳转
+     * cid=客户端应用id，rcode=临时code
+     * @param index
+     */
+    @GetMapping("/link/{index}/{cid}/{rcode}")
+    public void linkAuth(@PathVariable(value = "index", required = true) String index,
+        @PathVariable(value = "cid", required = true) String cid,
+        @PathVariable(value = "rcode", required = true) String rcode) {
+        String url;
+        if (CodingUtil.isNumeric(index)) {
+            url = panelLinkService.getUrlByIndex(Long.parseLong(index));
+        } else {
+            url = panelLinkService.getUrlByUuid(index);
+        }
+        HttpServletResponse response = ServletUtils.response();
+        try {
+            // TODO 增加仪表板外部参数
+            HttpServletRequest request = ServletUtils.request();
+            String attachParams = request.getParameter("attachParams");
+            if(StringUtils.isNotEmpty(attachParams)){
+                url = url+"&attachParams="+attachParams;
+            }
+            //将cid和rcode原样返回
+            url = url + "&cid=" + cid + "&rcode=" + rcode;
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            LogUtil.error(e.getMessage());
+            DEException.throwException(e);
+        }
+    }
+
+
     @GetMapping("/tempMobileLink/{id}/{token}")
     public void tempMobileLink(@PathVariable("id") String id, @PathVariable("token") String token) {
         String url = "/#preview/" + id;
