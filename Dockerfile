@@ -24,6 +24,6 @@ CMD ["/deployments/run-java.sh"]
 #1: yarn or npm frontend : yarn build:prodbuild:prod
 #2: mvn clean package -Pwhole  for backend
 #3: docker build to image
-#docker build --build-arg IMAGE_TAG=1.16.0.001 -t dataease:v1.16.0.001 .
-#docker save -o dataease.v1.16.0.001.tar  dataease:v1.16.0.001
-#docker load < dataease.v1.16.0.001.tar
+#docker build --build-arg IMAGE_TAG=1.17.0.001 -t dataease:v1.17.0.001 .
+#docker save -o dataease.v1.17.0.001.tar  dataease:v1.17.0.001
+#docker load < dataease.v1.17.0.001.tar
